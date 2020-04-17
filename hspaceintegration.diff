@@ -1,0 +1,536 @@
+--- ../clean/pennmush-1.8.5p3/src/local.c	1970-01-01 00:00:00.000000000 +0000
++++ src/local.c	2012-11-27 14:42:50.000000000 +0000
+@@ -0,0 +1,301 @@
++/*----------------------------------------------- -*- c -*-
++ * Local stuff
++ *
++ * This file contains custom stuff, and some of the items here are
++ * called from within PennMUSH at specific times.
++ */
++
++/* Here are some includes you're likely to need or want.
++ */
++#include "copyrite.h"
++#include "config.h"
++#include <string.h>
++#include "conf.h"
++#include "dbio.h"
++#include "externs.h"
++#include "parse.h"
++#include "htab.h"
++#include "command.h"
++#include "lock.h"
++#include "game.h"
++#include "confmagic.h"
++
++
++extern HASHTAB htab_reserved_aliases;
++
++/* Called after all MUSH init is done.
++ */
++void
++local_startup(void)
++{
++
++/* Register local_timer to be called once a second. You can also
++* register other callbacks to run at other intervals. See local_timer()
++* below for an example of what the callback function needs to do if it
++* should be run more than once. 
++*
++* Arguments are: Number of seconds from now to run, the callback function,
++* a data argument to pass to it, and a softcoded event name to run at the same
++* time. The latter two can be null pointers. The callback function returns true
++* if the softcode event should be triggered, false if it shouldn't.
++*/
++#if 1                           /* Change to 1 if you need local_timer functionality. */
++  sq_register_loop(1, local_timer, NULL, NULL);
++#endif
++#ifdef HSPACE
++  HSInitialize();
++#endif
++}
++
++/* Add you own runtime configuration options here, and you can set
++ * them in mush.cnf.
++ */
++void
++local_configs(void)
++{
++#ifdef EXAMPLE
++  /* For each config parameter you add, you should initialize it as a
++   * static variable here (or a global variable elsewhere in your
++   * code)
++   */
++  static int config_example = 1;
++  static char config_string[BUFFER_LEN];
++#endif
++
++  /* Initial size of this hashtable should be close to the number of
++   * add_config()'s you plan to do.
++   */
++  hashinit(&local_options, 4);
++
++#ifdef EXAMPLE
++  /* Call add_config for each config parameter you want to add.
++   * Note the use of &config_example for simple types (bool, int),
++   * but just config_string for strings.
++   */
++  add_config("use_example", cf_bool, &config_example, sizeof config_example,
++             "cosmetic");
++  add_config("some_string", cf_str, config_string, sizeof config_string,
++             "cosmetic");
++#endif
++}
++
++/* Add any custom @locks in here. The valid flags can be found in lock.h */
++void
++local_locks(void)
++{
++#ifdef EXAMPLE
++  define_lock("AdminOnlyLock", LF_PRIVATE | LF_WIZARD);
++  define_lock("NormalLock", LF_PRIVATE);
++#endif
++}
++
++
++/* Called when the database will be saved
++ * This is called JUST before we dump the
++ * database to disk
++ * Use to save any in-memory structures
++ * back to disk
++ */
++void
++local_dump_database(void)
++{
++#ifdef HSPACE
++  HSDumpDatabase();
++#endif
++}
++
++/* Called when the MUSH is shutting down.
++ * The DB has been saved and descriptors closed
++ * The log files are still open though.
++ */
++void
++local_shutdown(void)
++{
++#ifdef HSPACE
++  HSShutdown();
++#endif
++}
++
++/* Called when the MUSH is performing a dbck database check,
++ * at the end of the check. A good place to add any regular
++ * consistency checking you require.
++ */
++void
++local_dbck(void)
++{
++}
++
++/* This is called exactly once a second
++ * After the MUSH has done all it's stuff
++ */
++bool
++local_timer(void *data __attribute__ ((__unused__)))
++{
++#ifdef HSPACE
++  HSCycle();
++#endif
++  /* The callback has to be set back up or it'll only run once. */
++  return false;
++}
++
++/* Called when a player connects. If this is a new creation,
++ * isnew will be true. num gives the number of connections by
++ * that player (so if num > 1, this is a multiple connect).
++ */
++void
++local_connect(dbref player __attribute__ ((__unused__)),
++              int isnew __attribute__ ((__unused__)),
++              int num __attribute__ ((__unused__)))
++{
++}
++
++/* Called when a player disconnects. If num > 1, this is
++ * a partial disconnect.
++ */
++void
++local_disconnect(dbref player __attribute__ ((__unused__)),
++                 int num __attribute__ ((__unused__)))
++{
++}
++
++
++/* For serious hackers only */
++
++/* Those who are depraved enough to do so (Like me), can always 
++ * abuse this as a new and better way of Always Doing Stuff
++ * to objects.
++ * Like, say you want to put out a message on the wizard
++ * channel every time an object is destroyed, do so in the
++ * local_data_destroy() routine.
++ */
++
++/* Called when a object is created with @create (or @dig, @link) 
++ * This is done AFTER object-specific setup, so the types
++ * etc will already be set, and object-specific initialization
++ * will be done.
++ * Note that the game will ALWAYS set the LocData to NULL before
++ * this routine is called.
++ */
++
++/* For a well-commented example of how to use this code,
++ * see: ftp://bimbo.hive.no/pub/PennMUSH/coins.tar.gz
++ */
++
++void
++local_data_create(dbref object __attribute__ ((__unused__)))
++{
++}
++
++/* Called when an object is cloned. Since clone is a rather
++ * specific form of creation, it has it's own function.
++ * Note that local_data_create() is NOT called for this object
++ * first, but the system will always set LocData to NULL first.
++ * Clone is the 'new' object, while source is the one it's
++ * being copied from.
++ */
++
++void
++local_data_clone(dbref clone __attribute__ ((__unused__)),
++                 dbref source __attribute__ ((__unused__)),
++                 int preserve __attribute__ ((__unused__)))
++{
++}
++
++/* Called when a object is REALLY destroyed, not just set
++ * Going.
++ */
++
++void
++local_data_free(dbref object __attribute__ ((__unused__)))
++{
++#ifdef HSPACE
++  HSObjectDestroyed(object);
++#endif
++}
++
++/* Initiation of objects after a reload or dumping to disk should
++ * be handled in local_dump_database() and local_startup().
++ */
++
++
++/* This function is called *before* most standard interaction checks,
++ * and can override them. You probably want to do as little as possible
++ * here and do most of the work in local_can_interact_last instead.
++ * If this returns NOTHING, it means 'go on to more checks'
++ */
++int
++local_can_interact_first(dbref from __attribute__ ((__unused__)),
++                         dbref to __attribute__ ((__unused__)), int type
++                         __attribute__ ((__unused__)))
++{
++
++  return NOTHING;
++}
++
++/* This one is called *after* most standard interaction checks. */
++int
++local_can_interact_last(dbref from __attribute__ ((__unused__)),
++                        dbref to __attribute__ ((__unused__)), int type
++                        __attribute__ ((__unused__)))
++{
++  /* from is where the message is coming from, in theory. It makes sense
++   * for sound, but think of it as light rays for visiblity or matching. 
++   * The rays come *from* someone standing in a room, and go *to* the person
++   * looking around.
++   */
++
++#ifdef NEVER
++  /* Various examples follow */
++
++  switch (type) {
++  case INTERACT_SEE:
++    /* Someone standing in a room, or doing
++     * @verb type stuff that's @bar, @obar, and @abar
++     */
++
++    /* Probably a good idea */
++    if (See_All(to))
++      return 1;
++
++    break;
++
++  case INTERACT_PRESENCE:
++    /* Someone arriving or leaving, connecting or disconnecting, 
++     * and (for objects) growing or losing ears.
++     */
++
++    /* To prevent spying, always notice presence */
++    return 1;
++
++    break;
++
++  case INTERACT_HEAR:
++    /* People talking */
++
++    /* Telepathy example. Players who can hear telepathy get @set
++     * HEAR_TELEPATHY,  players currently using telepathy should be
++     * @set USE_TELEPATHY. */
++
++    if (has_flag_by_name(from, "USE_TELEPATHY", NOTYPE))
++      return has_flag_by_name(to, "HEAR_TELEPATHY", NOTYPE);
++
++    break;
++
++  case INTERACT_MATCH:
++    /* Matching object names so you can pick them up, go through exits,
++       etc. */
++
++    break;
++  }
++
++  /* Splits the universe in half, half FOO and half not. */
++  return (has_flag_by_name(to, "FOO", NOTYPE) ==
++          has_flag_by_name(from, "FOO", NOTYPE));
++
++
++#endif                          /* NEVER */
++
++  /* You want to return NOTHING if you haven't made up your mind */
++  return NOTHING;
++
++}
+--- ../clean/pennmush-1.8.5p3/src/funlocal.c	1970-01-01 00:00:00.000000000 +0000
++++ src/funlocal.c	2012-11-27 06:45:30.000000000 +0000
+@@ -0,0 +1,85 @@
++/*-----------------------------------------------------------------
++ * Local functions
++ *
++ * This file is reserved for local functions that you may wish
++ * to hack into PennMUSH. Read parse.h for information on adding
++ * functions. This file will not be overwritten when you update
++ * to a new distribution, so it's preferable to add new functions
++ * here and leave the other fun*.c files alone.
++ *
++ */
++
++/* Here are some includes you're likely to need or want.
++ * If your functions are doing math, include <math.h>, too.
++ */
++#include "copyrite.h"
++#include "config.h"
++#include <string.h>
++#include "conf.h"
++#include "externs.h"
++#include "parse.h"
++#include "confmagic.h"
++#include "function.h"
++
++void local_functions(void);
++
++/* Here you can use the new add_function instead of hacking into function.c
++ * Example included :)
++ */
++
++#ifdef EXAMPLE
++FUNCTION(local_fun_silly)
++{
++  safe_format(buff, bp, "Silly%sSilly", args[0]);
++}
++
++#endif
++
++#ifdef HSPACE
++	FUNCTION_PROTO(hsf_info);
++	FUNCTION_PROTO(hsf_console_cmd);
++	FUNCTION_PROTO(hsf_set);
++	FUNCTION_PROTO(hsf_get);
++	FUNCTION_PROTO(hsf_shipsys_set);
++	FUNCTION_PROTO(hsf_shipsys_get);
++	FUNCTION_PROTO(hsf_clone);
++	FUNCTION_PROTO(hsf_systems);
++	FUNCTION_PROTO(hsf_list);
++	FUNCTION_PROTO(hsf_placesystem);
++	FUNCTION_PROTO(hsf_removesystem);
++	FUNCTION_PROTO(hsf_cargo_transfer);
++	FUNCTION_PROTO(hsf_cargo_get);
++	FUNCTION_PROTO(hsf_cargo_set);
++	FUNCTION_PROTO(hsf_is_object);
++	FUNCTION_PROTO(hsf_new);
++   FUNCTION_PROTO(hsf_srep);
++#endif
++
++void
++local_functions(void)
++{
++#ifdef HSPACE
++  function_add("HS_INFO", hsf_info, 0, 0, FN_REG);
++  function_add("HS_CONSOLE_CMD", hsf_console_cmd, 1, 5, FN_REG);
++  function_add("HS_SET", hsf_set, 4, 4, FN_REG);
++  function_add("HS_GET", hsf_get, 3, 3, FN_REG);
++  function_add("HS_SHIPSYS_SET", hsf_shipsys_set, 3, 4, FN_REG);
++  function_add("HS_SHIPSYS_GET", hsf_shipsys_get, 3, 3, FN_REG);
++  function_add("HS_CLONE", hsf_clone, 1, 1, FN_REG);
++  function_add("HS_SYSTEMS", hsf_systems, 1, 2, FN_ADMIN);
++  function_add("HS_LIST", hsf_list, 1, 2, FN_ADMIN);
++  function_add("HS_PLACESYSTEM", hsf_placesystem, 3, 3, FN_WIZARD);
++  function_add("HS_REMOVESYSTEM", hsf_removesystem, 2, 2, FN_WIZARD);
++  function_add("HS_CARGO_TRANSFER", hsf_cargo_transfer, 4, 4, FN_WIZARD);
++  function_add("HS_CARGO_GET", hsf_cargo_get, 2, 2, FN_WIZARD);
++  function_add("HS_CARGO_SET", hsf_cargo_set, 3, 3, FN_WIZARD);
++  function_add("HS_IS_OBJECT", hsf_is_object, 2, 2, FN_REG);
++  function_add("HS_NEW", hsf_new, 1, 3, FN_WIZARD);
++  function_add("HS_SREP", hsf_srep, 1, 2, FN_ADMIN);
++#endif
++
++#ifdef EXAMPLE
++  function_add("SILLY", local_fun_silly, 1, 1, FN_REG);
++#endif
++
++}
+--- ../clean/pennmush-1.8.5p3/src/cmdlocal.c	1970-01-01 00:00:00.000000000 +0000
++++ src/cmdlocal.c	2012-11-27 06:45:32.000000000 +0000
+@@ -0,0 +1,100 @@
++/* -*- c -*-
++/*-----------------------------------------------------------------
++ * Local stuff
++ *
++ * This file contains custom stuff, and some of the items here are
++ * called from within PennMUSH at specific times.
++ */
++
++/* Here are some includes you're likely to need or want.
++ */
++#include "copyrite.h"
++#include "config.h"
++#include <string.h>
++#include "conf.h"
++#include "externs.h"
++#include "parse.h"
++#include "htab.h"
++#include "flags.h"
++#include "command.h"
++#include "cmds.h"
++#include "confmagic.h"
++
++extern HASHTAB htab_reserved_aliases;
++
++/* Called during the command init sequence before any commands are
++ * added (including local_commands, below). This is where you
++ * want to reserve any strings that you *don't* want any command
++ * to alias to (because you want to preserve it for matching exits
++ * or globals)
++ */
++void
++reserve_aliases(void)
++{
++#ifdef EXAMPLE
++  /* Example: Don't alias any commands to cardinal directions.
++   * Remove the #ifdef EXAMPLE and #endif to use this code
++   */
++  reserve_alias("W");
++  reserve_alias("E");
++  reserve_alias("S");
++  reserve_alias("N");
++  reserve_alias("NW");
++  reserve_alias("NE");
++  reserve_alias("SW");
++  reserve_alias("SE");
++  reserve_alias("U");
++  reserve_alias("D");
++#endif
++}
++
++#ifdef EXAMPLE
++COMMAND(cmd_local_silly)
++{
++  if (SW_ISSET(sw, SWITCH_NOISY))
++    notify_format(player, "Noisy silly with %s", arg_left);
++  if (SW_BY_NAME(sw, "VERY"))
++    notify(player, "The following line will be very silly indeed.");
++  notify_format(player, "SillyCommand %s", arg_left);
++}
++#endif
++
++#ifdef HSPACE
++COMMAND_PROTO(hsc_space);
++COMMAND_PROTO(hsc_man);
++COMMAND_PROTO(hsc_unman);
++COMMAND_PROTO(hsc_board);
++COMMAND_PROTO(hsc_disembark);
++#endif
++
++
++/* Called during the command init sequence.
++ * This is where you'd put calls to command_add to insert a local
++ * command into the command hash table. Any command you add here
++ * will be auto-aliased for you.
++ * The way to call command_add is illustrated below. The arguments are:
++ *   Name of the command, a string ("@SILLY")
++ *   Command parsing modifiers, a bitmask (see hdrs/command.h)
++ *   Flags to restrict command to, a string ("WIZARD ROYALTY") or NULL
++ *     (Someone with *any* one of these flags can use the command)
++ *   Powers to restrict command to, a string ("SEE_ALL") or NULL
++ *     (Someone with this power can use the command)
++ *   Switches the command can take, a string or NULL ("NOISY NOEVAL")
++ *   Hardcoded function the command should call (cmd_local_silly)
++ */
++void
++local_commands(void)
++{
++#ifdef EXAMPLE
++  command_add("@SILLY", CMD_T_ANY, "WIZARD ROYALTY", "SEE_ALL",
++              "NOISY NOEVAL VERY", cmd_local_silly);
++#endif
++
++#ifdef HSPACE
++	command_add("@SPACE", CMD_T_ANY | CMD_T_SWITCHES, NULL, NULL, NULL, hsc_space);
++	command_add("MAN", CMD_T_ANY, NULL, NULL, NULL, hsc_man);
++	command_add("UNMAN", CMD_T_ANY, NULL, NULL, NULL, hsc_unman);
++	command_add("BOARD", CMD_T_ANY, NULL, NULL, NULL, hsc_board);
++	command_add("DISEMBARK", CMD_T_ANY, NULL, NULL, NULL, hsc_disembark);
++#endif
++}
+--- ../clean/pennmush-1.8.5p3/Makefile.in	2012-08-23 04:17:47.000000000 +0000
++++ Makefile.in	2012-11-27 06:45:32.000000000 +0000
+@@ -20,9 +20,9 @@
+ SQL_CFLAGS=@MYSQL_CFLAGS@ @POSTGRESQL_CFLAGS@ @SQLITE3_CFLAGS@
+ SQL_LDFLAGS=@MYSQL_LDFLAGS@ @POSTGRESQL_LDFLAGS@ @SQLITE3_LDFLAGS@
+ 
+-CCFLAGS=@CFLAGS@ -I.. -I../hdrs @CPPFLAGS@ @PCRE_CFLAGS@ @OPENSSL_INCLUDES@
++CCFLAGS=@CFLAGS@ -I.. -I../hdrs @CPPFLAGS@ @PCRE_CFLAGS@ @OPENSSL_INCLUDES@ -DHSPACE
+ LDFLAGS=@LDFLAGS@  @OPENSSL_LDFLAGS@
+-CLIBS=@LIBS@ @PCRE_LIBS@ @OPENSSL_LIBS@
++CLIBS=@LIBS@ @PCRE_LIBS@ @OPENSSL_LIBS@ -lpthread -Lhspace -lhspace -Lhspace/hsportab -lhsportab -lstdc++ -ldl
+ INSTALL=@INSTALL@
+ INSTALLDIR=$installdir
+ CP=@CP@
+@@ -34,7 +34,7 @@
+ # Where to install with 'make globalinstall'
+ GLOBAL_INSTALL=@libexecdir@
+ 
+-all: config.h options.h autogen game/mush.cnf
++all: config.h options.h autogen game/mush.cnf hspace
+ 	@echo "Making all in src."
+ 	(cd src; @MAKE@ all "CC=$(CC)" "CCFLAGS=$(CCFLAGS)" \
+ 	"LDFLAGS=$(LDFLAGS)" "CLIBS=$(CLIBS)" "MAKE=$(MAKE)" \
+@@ -42,6 +42,9 @@
+ 	"SQL_LDFLAGS=$(SQL_LDFLAGS)")
+ 	@echo "If the make was successful, use 'make install' to install links."
+ 
++hspace:
++	$(MAKE) -C src/hspace
++
+ config.h: configure
+ 	@echo "Looks like your configure has been updated."
+ 	@echo "Run that first. If you did just run configure and"
+@@ -180,6 +183,7 @@
+ clean:
+ 	(cd src; make clean)
+ 	(cd game; rm -f netmush info_slave)
++	(cd src/hspace; make clean)
+ 
+ distclean: 
+ 	(cd hdrs; rm -f *.orig *~ \#* *.rej *.bak funs.h cmds.h buildinf.h)

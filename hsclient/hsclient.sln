@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hsclient", "hsclient.vcxproj", "{48DFBE40-879E-4675-91C9-89F260E71FEF}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hsportab", "..\hsportab\hsportab.vcxproj", "{B819C4CF-AF4B-450E-B4BB-22BE563A05F4}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "hsnetwork", "..\hsnetwork\hsnetwork.vcxproj", "{7907A00D-1B01-408D-9274-4FC218CC73C8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{48DFBE40-879E-4675-91C9-89F260E71FEF}.Debug|Win32.ActiveCfg = Debug|Win32
+		{48DFBE40-879E-4675-91C9-89F260E71FEF}.Debug|Win32.Build.0 = Debug|Win32
+		{48DFBE40-879E-4675-91C9-89F260E71FEF}.Release|Win32.ActiveCfg = Release|Win32
+		{48DFBE40-879E-4675-91C9-89F260E71FEF}.Release|Win32.Build.0 = Release|Win32
+		{B819C4CF-AF4B-450E-B4BB-22BE563A05F4}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B819C4CF-AF4B-450E-B4BB-22BE563A05F4}.Debug|Win32.Build.0 = Debug|Win32
+		{B819C4CF-AF4B-450E-B4BB-22BE563A05F4}.Release|Win32.ActiveCfg = Release|Win32
+		{B819C4CF-AF4B-450E-B4BB-22BE563A05F4}.Release|Win32.Build.0 = Release|Win32
+		{7907A00D-1B01-408D-9274-4FC218CC73C8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7907A00D-1B01-408D-9274-4FC218CC73C8}.Debug|Win32.Build.0 = Debug|Win32
+		{7907A00D-1B01-408D-9274-4FC218CC73C8}.Release|Win32.ActiveCfg = Release|Win32
+		{7907A00D-1B01-408D-9274-4FC218CC73C8}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

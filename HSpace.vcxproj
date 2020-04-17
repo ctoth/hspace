@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{3198AD27-CAC5-47FF-8805-528B70F6B834}</ProjectGuid>
+    <RootNamespace>HSpace</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">win32-deps\openssl-vs2010\include;win32-deps\pcre-7.9-static;$(IncludePath)</IncludePath>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">win32-deps\openssl-vs2010\include;win32-deps\pcre-7.9-static;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Message>Copying necessary files...</Message>
+      <Command>IF NOT EXIST $(ProjectDir)\..\..\src\cmdlocal.c copy $(ProjectDir)\win32-localfiles\cmdlocal.c $(ProjectDir)\..\..\src\cmdlocal.c
+IF NOT EXIST $(ProjectDir)\..\..\src\flaglocal.c copy $(ProjectDir)\..\..\src\flaglocal.dst $(ProjectDir)\..\..\src\flaglocal.c
+IF NOT EXIST $(ProjectDir)\..\..\src\funlocal.c copy $(ProjectDir)\win32-localfiles\funlocal.c $(ProjectDir)\..\..\src\funlocal.c
+IF NOT EXIST $(ProjectDir)\..\..\src\local.c copy $(ProjectDir)\win32-localfiles\local.c $(ProjectDir)\..\..\src\local.c
+copy $(ProjectDir)\..\..\win32\options.h $(ProjectDir)\..\..\options.h
+copy $(ProjectDir)\win32-localfiles\config.h $(ProjectDir)\..\..\config.h
+copy $(ProjectDir)\..\..\win32\confmagic.h $(ProjectDir)\..\..\confmagic.h
+copy $(ProjectDir)\..\..\win32\patches.h $(ProjectDir)\..\..\hdrs\patches.h
+wscript.exe $(ProjectDir)\..\..\win32\mkcmds.js
+echo If any *local.c files failed to build, run build again.
+</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>../../hdrs;../..;./hsserver;./hsportab;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>PENNMUSH;WIN32;_DEBUG;_LIB;_USE_32BIT_TIME_T;HS_LOG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>false</MinimalRebuild>
+      <BasicRuntimeChecks>Default</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <AdditionalOptions> /J</AdditionalOptions>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Message>Copying necessary files...</Message>
+      <Command>IF NOT EXIST $(ProjectDir)\..\..\src\cmdlocal.c copy $(ProjectDir)\win32-localfiles\cmdlocal.c $(ProjectDir)\..\..\src\cmdlocal.c
+IF NOT EXIST $(ProjectDir)\..\..\src\flaglocal.c copy $(ProjectDir)\..\..\src\flaglocal.dst $(ProjectDir)\..\..\src\flaglocal.c
+IF NOT EXIST $(ProjectDir)\..\..\src\funlocal.c copy $(ProjectDir)\win32-localfiles\funlocal.c $(ProjectDir)\..\..\src\funlocal.c
+IF NOT EXIST $(ProjectDir)\..\..\src\local.c copy $(ProjectDir)\win32-localfiles\local.c $(ProjectDir)\..\..\src\local.c
+copy $(ProjectDir)\..\..\win32\options.h $(ProjectDir)\..\..\options.h
+copy $(ProjectDir)\win32-localfiles\config.h $(ProjectDir)\..\..\config.h
+copy $(ProjectDir)\..\..\win32\confmagic.h $(ProjectDir)\..\..\confmagic.h
+copy $(ProjectDir)\..\..\win32\patches.h $(ProjectDir)\..\..\hdrs\patches.h
+wscript.exe $(ProjectDir)\..\..\win32\mkcmds.js
+echo If any *local.c files failed to build, run build again.</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <AdditionalIncludeDirectories>../../hdrs;../../;./hsserver;./hsportab;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>PENNMUSH;WIN32;NDEBUG;_LIB;_USE_32BIT_TIME_T;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="HSAsteroids.cpp" />
+    <ClCompile Include="HSAttributed.cpp" />
+    <ClCompile Include="HSAutopilot.cpp" />
+    <ClCompile Include="HSBeamWeapon.cpp" />
+    <ClCompile Include="HSCargoBay.cpp" />
+    <ClCompile Include="HSCargoContainer.cpp" />
+    <ClCompile Include="HSCargoPod.cpp" />
+    <ClCompile Include="HSCommand.cpp" />
+    <ClCompile Include="HSCommodity.cpp" />
+    <ClCompile Include="HSCommunications.cpp" />
+    <ClCompile Include="HSComputer.cpp" />
+    <ClCompile Include="HSConf.cpp" />
+    <ClCompile Include="HSConsole.cpp" />
+    <ClCompile Include="HSDB.cpp" />
+    <ClCompile Include="HSDimensionalDrive.cpp" />
+    <ClCompile Include="HSDockingHatch.cpp" />
+    <ClCompile Include="HSEngine.cpp" />
+    <ClCompile Include="HSFuelTank.cpp" />
+    <ClCompile Include="HSFunctions.cpp" />
+    <ClCompile Include="HSHarvester.cpp" />
+    <ClCompile Include="HSHullClass.cpp" />
+    <ClCompile Include="HSIfacePenn.cpp" />
+    <ClCompile Include="HSIfacePennHooks.cpp" />
+    <ClCompile Include="HSJumpGate.cpp" />
+    <ClCompile Include="HSLandingLocation.cpp" />
+    <ClCompile Include="HSNebula.cpp" />
+    <ClCompile Include="HSObject.cpp" />
+    <ClCompile Include="HSPlanet.cpp" />
+    <ClCompile Include="HSReactor.cpp" />
+    <ClCompile Include="HSRepairSystem.cpp" />
+    <ClCompile Include="HSResource.cpp" />
+    <ClCompile Include="HSSensor.cpp" />
+    <ClCompile Include="HSShield.cpp" />
+    <ClCompile Include="HSShip.cpp" />
+    <ClCompile Include="HSSystem.cpp" />
+    <ClCompile Include="HSTerritory.cpp" />
+    <ClCompile Include="HSThrusters.cpp" />
+    <ClCompile Include="HSUniverse.cpp" />
+    <ClCompile Include="HSWarehouse.cpp" />
+    <ClCompile Include="HSWeapon.cpp" />
+    <ClCompile Include="sqlite3.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HSAsteroids.h" />
+    <ClInclude Include="HSAttributed.h" />
+    <ClInclude Include="HSAutopilot.h" />
+    <ClInclude Include="HSBeamWeapon.h" />
+    <ClInclude Include="HSCargoBay.h" />
+    <ClInclude Include="HSCargoContainer.h" />
+    <ClInclude Include="HSCargoPod.h" />
+    <ClInclude Include="HSCommand.h" />
+    <ClInclude Include="HSCommodity.h" />
+    <ClInclude Include="HSCommunications.h" />
+    <ClInclude Include="HSComputer.h" />
+    <ClInclude Include="HSConf.h" />
+    <ClInclude Include="HSConsole.h" />
+    <ClInclude Include="HSDB.h" />
+    <ClInclude Include="HSDimensionalDrive.h" />
+    <ClInclude Include="HSDockingHatch.h" />
+    <ClInclude Include="HSEngine.h" />
+    <ClInclude Include="HSFuelTank.h" />
+    <ClInclude Include="HSFunctions.h" />
+    <ClInclude Include="HSHarvester.h" />
+    <ClInclude Include="HSHullClass.h" />
+    <ClInclude Include="HSIface.h" />
+    <ClInclude Include="HSJumpGate.h" />
+    <ClInclude Include="HSLandingLocation.h" />
+    <ClInclude Include="HSNebula.h" />
+    <ClInclude Include="HSObject.h" />
+    <ClInclude Include="HSPlanet.h" />
+    <ClInclude Include="HSReactor.h" />
+    <ClInclude Include="HSRepairSystem.h" />
+    <ClInclude Include="HSResource.h" />
+    <ClInclude Include="HSSensor.h" />
+    <ClInclude Include="HSShield.h" />
+    <ClInclude Include="HSShip.h" />
+    <ClInclude Include="HSSystem.h" />
+    <ClInclude Include="HSTerritory.h" />
+    <ClInclude Include="HSThrusters.h" />
+    <ClInclude Include="HSUniverse.h" />
+    <ClInclude Include="HSVersion.h" />
+    <ClInclude Include="HSWarehouse.h" />
+    <ClInclude Include="HSWeapon.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="hsportab\hsportab.vcxproj">
+      <Project>{b819c4cf-af4b-450e-b4bb-22be563a05f4}</Project>
+      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

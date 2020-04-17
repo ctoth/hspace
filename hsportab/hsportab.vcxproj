@@ -1,0 +1,138 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B819C4CF-AF4B-450E-B4BB-22BE563A05F4}</ProjectGuid>
+    <RootNamespace>hsportab</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>NotSet</CharacterSet>
+    <PlatformToolset>v110</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(Configuration)\</IntDir>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(Configuration)\</IntDir>
+    <IncludePath Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;$(IncludePath)</IncludePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" />
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <PreBuildEvent>
+      <Command>cd ..
+updaterev.bat
+cd hsportab
+</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>C:\Program Files %28x86%29\Microsoft DirectX SDK %28June 2010%29\Include;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;HS_LOG;_WIN32_WINNT=0x600;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <PreBuildEvent>
+      <Command>cd ..
+updaterev.bat
+cd hsportab
+</Command>
+    </PreBuildEvent>
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;_WIN32_WINNT=0x501;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="HSApplicationWin32.cpp" />
+    <ClCompile Include="HSButtonWin32.cpp" />
+    <ClCompile Include="HSCondVarWin32.cpp" />
+    <ClCompile Include="HSFont.cpp" />
+    <ClCompile Include="HSLog.cpp" />
+    <ClCompile Include="HSMutexWin32.cpp" />
+    <ClCompile Include="HSRendererWin32.cpp" />
+    <ClCompile Include="HSSettings.cpp" />
+    <ClCompile Include="HSSocketManagerWin32.cpp" />
+    <ClCompile Include="HSSocketWin32.cpp" />
+    <ClCompile Include="HSTextBoxWin32.cpp" />
+    <ClCompile Include="HSTextureWin32.cpp" />
+    <ClCompile Include="HSThreadWin32.cpp" />
+    <ClCompile Include="HSTools.cpp" />
+    <ClCompile Include="HSVector3D.cpp" />
+    <ClCompile Include="HSVertexBufferWin32.cpp" />
+    <ClCompile Include="HSWindowWin32.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="HSAnsi.h" />
+    <ClInclude Include="HSApplication.h" />
+    <ClInclude Include="HSButton.h" />
+    <ClInclude Include="HSByteArray.h" />
+    <ClInclude Include="HSColor.h" />
+    <ClInclude Include="HSCondVar.h" />
+    <ClInclude Include="HSFont.h" />
+    <ClInclude Include="HSGlobal.h" />
+    <ClInclude Include="HSLog.h" />
+    <ClInclude Include="HSMatrix3D.h" />
+    <ClInclude Include="HSMutex.h" />
+    <ClInclude Include="HSMutexWin32.h" />
+    <ClInclude Include="HSRenderer.h" />
+    <ClInclude Include="HSRendererPrivWin32.h" />
+    <ClInclude Include="HSSettings.h" />
+    <ClInclude Include="HSSocket.h" />
+    <ClInclude Include="HSSocketManager.h" />
+    <ClInclude Include="HSSocketWin32.h" />
+    <ClInclude Include="HSTextBox.h" />
+    <ClInclude Include="HSTexture.h" />
+    <ClInclude Include="HSTextureWin32.h" />
+    <ClInclude Include="HSThread.h" />
+    <ClInclude Include="HSTools.h" />
+    <ClInclude Include="HSTypes.h" />
+    <ClInclude Include="HSVector3D.h" />
+    <ClInclude Include="HSVertexBuffer.h" />
+    <ClInclude Include="HSVertexBufferWin32.h" />
+    <ClInclude Include="HSWindow.h" />
+    <ClInclude Include="HSWindowPrivWin32.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

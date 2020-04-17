@@ -1,0 +1,53 @@
+asaHSpace 5.0 Millennium Editiion Installation
+-------------------------------------------------------------------------------
+Thank you for using HSpace 5.0, this version of HSpace has been
+re-built from the ground up using true object oriented coding with
+speed and expandability in mind.  HS5 uses minimal information from
+the MUSH and stores all space related data locally instead of on
+objects.
+
+We have provided all the tools you will need in the form of @commands
+and functions within the MUSH so that you may customize the look and
+feel of HSpace and tailor the players experience to your liking.
+
+HSpace 5 is currently compatible with the following builds:
+PennMUSH 1.8.3p9+
+
+If you would like to work on the HSpace 5 project and help us create
+the links for other platforms/versions please get in touch with us.
+
+Now on to the installation.
+o=================================================================================o
+o  PennMUSH Installation							 o
+o===============================================================================o
+
+o------------------------------------------------o
+o  STEP 1: Unpack PennMUSH 			o
+o----------------------------------------------o
+
+First unpack pennmush to a fresh directory.
+
+o------------------------------------------------o
+o  STEP 2: Retrieve HSpace			o
+o----------------------------------------------o
+
+Either retrieve HSpace as a tarball when available, or go into the <install>/src
+directory and type:
+
+'hg clone https://www.hsdev.org/hg/hspace ./hspace'
+(
+mercurial is required to be installed for the latter option)
+
+o------------------------------------------------o
+o  STEP 3: Integrate HSpace                     o
+o----------------------------------------------o
+
+From the PennMUSH installation directory type:
+
+'patch -p0 -i src/hspace/hspaceintegration.diff'
+
+o------------------------------------------------o
+o  STEP 4: Proceed to build/configure PennMUSH  o
+o----------------------------------------------o
+
+Run configure and proceed to build and configure PennMUSH as normal.
